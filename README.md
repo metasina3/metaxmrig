@@ -1,4 +1,16 @@
-# XMRig
+# MetaXMRig
+
+Experimental fork of XMRig 6.26.0 for measured RandomX CPU tuning.
+
+- **[MetaXMRig Linux test releases](https://github.com/metasina3/metaxmrig/releases)**
+- **[راهنمای نصب و تست فارسی](docs/TESTING_FA.md)**
+- **[شرح تغییرات و نتایج آزمایش‌ها](docs/CHANGES_FA.md)**
+- New option: `--randomx-aes=auto|aes|vaes512`. Default `auto` retains the upstream Zen 5 selection policy with additional capability checks; `vaes512` is an opt-in experiment on other compatible CPUs.
+- Packages include an unmodified, pinned upstream binary for comparison. A hashrate increase is hardware-dependent and must be measured.
+
+The upstream project description, credits and donation details follow.
+
+# XMRig upstream
 
 [![Github All Releases](https://img.shields.io/github/downloads/xmrig/xmrig/total.svg)](https://github.com/xmrig/xmrig/releases)
 [![GitHub release](https://img.shields.io/github/release/xmrig/xmrig/all.svg)](https://github.com/xmrig/xmrig/releases)

@@ -25,6 +25,8 @@
 #include "crypto/rx/RxQueue.h"
 #include "crypto/randomx/randomx.h"
 #include "crypto/randomx/aes_hash.hpp"
+#include "base/io/log/Log.h"
+#include "base/io/log/Tags.h"
 
 
 #ifdef XMRIG_FEATURE_MSR
@@ -135,6 +137,21 @@ bool xmrig::Rx::init(const T &seed, const RxConfig &config, const CpuConfig &cpu
     randomx_set_scratchpad_prefetch_mode(config.scratchpadPrefetchMode());
     randomx_set_huge_pages_jit(cpu.isHugePagesJit());
     randomx_set_optimized_dataset_init(config.initDatasetAVX2());
+
+    const bool requestVAES512 = cpu.isHwAES() && (config.aesMode() == RxConfig::AesVAES512 ||
+        (config.aesMode() == RxConfig::AesAuto && Cpu::info()->arch() == ICpuInfo::ARCH_ZEN5));
+    const bool selectedVAES512 = SelectHardwareAESImpl(requestVAES512);
+    static int previousAesMode = -1;
+    static bool previousHwAES = false;
+    if (previousAesMode != static_cast<int>(config.aesMode()) || previousHwAES != cpu.isHwAES()) {
+        LOG_INFO("%s AES implementation: %s (requested: %s)", Tags::randomx(),
+                 cpu.isHwAES() ? (selectedVAES512 ? "vaes512" : "aes") : "software", config.aesModeName());
+        if (config.aesMode() == RxConfig::AesVAES512 && !selectedVAES512) {
+            LOG_WARN("%s VAES512 unavailable or hardware AES disabled; using fallback", Tags::randomx());
+        }
+        previousAesMode = static_cast<int>(config.aesMode());
+        previousHwAES = cpu.isHwAES();
+    }
 
     if (!osInitialized) {
 #       ifdef XMRIG_FIX_RYZEN

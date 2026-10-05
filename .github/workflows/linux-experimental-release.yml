@@ -1,0 +1,58 @@
+name: Linux experimental release
+
+on:
+  push:
+    branches: [master]
+    paths: [release/VERSION]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: linux-experimental-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'metasina3/metaxmrig'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential cmake git curl libuv1-dev libssl-dev autoconf automake libtool
+      - name: Build static candidate and pinned upstream baseline
+        run: bash scripts/build_linux_release.sh
+      - name: Check AES kernel equivalence when the runner supports VAES512
+        run: bash scripts/test_aes.sh
+      - name: Check CLI override preserves the existing RandomX configuration
+        run: python3 tests/test_aes_config.py "build-release/metaxmrig-$(cat release/VERSION)-linux-x64/metaxmrig"
+      - name: Check full offline RandomX reference checksums
+        run: |
+          version=$(cat release/VERSION)
+          bundle="build-release/metaxmrig-$version-linux-x64"
+          python3 scripts/compare_randomx.py --candidate "$bundle/metaxmrig" \
+            --baseline "$bundle/xmrig-baseline" --modes vaes512 --algorithms rx/0 \
+            --threads 4 --rounds 1 --output build-release/verification
+      - name: Publish experimental release with verified binaries
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          version=$(cat release/VERSION)
+          tag="v$version"
+          bundle="build-release/metaxmrig-$version-linux-x64"
+          tar -czf build-release/ci-verification.tar.gz -C build-release verification
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release already exists; refusing to replace published assets."
+            exit 1
+          fi
+          gh release create "$tag" "$bundle.tar.gz" "$bundle.sha256" \
+            build-release/verification/results.json#CI-RandomX-verification \
+            build-release/ci-verification.tar.gz \
+            --target "$SOURCE_SHA" --title "MetaXMRig $version — Linux experimental" \
+            --prerelease --latest=false --notes-file release/NOTES.md

@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <thread>
 #include <vector>
 #include <array>
+#include <atomic>
 
 #include "crypto/randomx/aes_hash.hpp"
 #include "base/tools/Chrono.h"
@@ -283,7 +284,20 @@ template void fillAes4Rx4<false>(void *state, size_t outputSize, void *buffer);
 
 #ifdef XMRIG_VAES
 void hashAndFillAes1Rx4_VAES512(void *scratchpad, size_t scratchpadSize, void *hash, void* fill_state);
+static std::atomic<bool> useVAES512{false};
 #endif
+
+bool SelectHardwareAESImpl(bool requestVAES512)
+{
+#ifdef XMRIG_VAES
+	const auto cpu = xmrig::Cpu::info();
+	const bool selected = requestVAES512 && cpu->hasAES() && cpu->hasVAES() && cpu->has(xmrig::ICpuInfo::FLAG_AVX512F);
+	useVAES512.store(selected, std::memory_order_relaxed);
+	return selected;
+#else
+	return false;
+#endif
+}
 
 template<int softAes, int unroll>
 void hashAndFillAes1Rx4(void *scratchpad, size_t scratchpadSize, void *hash, void* fill_state)
@@ -303,7 +317,11 @@ void hashAndFillAes1Rx4(void *scratchpad, size_t scratchpadSize, void *hash, voi
 #endif
 
 #ifdef XMRIG_VAES
-	if (xmrig::Cpu::info()->arch() == xmrig::ICpuInfo::ARCH_ZEN5) {
+	// Software AES remains software. The upstream VAES kernel uses aligned
+	// 64-byte accesses and prefetches 7168 bytes ahead.
+	if (softAes == 0 && useVAES512.load(std::memory_order_relaxed)
+		&& ((reinterpret_cast<uintptr_t>(scratchpad) | reinterpret_cast<uintptr_t>(hash) | reinterpret_cast<uintptr_t>(fill_state)) & 63) == 0
+		&& scratchpadSize >= 7168 && (scratchpadSize & 127) == 0) {
 		hashAndFillAes1Rx4_VAES512(scratchpad, scratchpadSize, hash, fill_state);
 		return;
 	}

@@ -221,6 +221,10 @@ bool xmrig::Config::read(const IJsonReader &reader, const char *fileName)
     if (!d_ptr->rx.read(reader.getValue(RxConfig::kField))) {
         m_upgrade = true;
     }
+    const auto aesOverride = reader.getString(RxConfig::kAesOverride);
+    if (aesOverride) {
+        d_ptr->rx.setAesMode(aesOverride);
+    }
 #   endif
 
 #   ifdef XMRIG_FEATURE_OPENCL

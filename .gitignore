@@ -1,4 +1,8 @@
 /build
+/build-release/
+/build-aes-test/
+/benchmark-results/
+__pycache__/
 scripts/build
 scripts/deps
 /CMakeLists.txt.user

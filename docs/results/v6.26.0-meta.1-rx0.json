@@ -1,0 +1,208 @@
+{
+  "created_utc": "2026-10-05T17:28:05.170692+00:00",
+  "machine": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "lscpu": "{\n   \"lscpu\": [\n      {\n         \"field\": \"Architecture:\",\n         \"data\": \"x86_64\"\n      },{\n         \"field\": \"CPU op-mode(s):\",\n         \"data\": \"32-bit, 64-bit\"\n      },{\n         \"field\": \"Address sizes:\",\n         \"data\": \"46 bits physical, 57 bits virtual\"\n      },{\n         \"field\": \"Byte Order:\",\n         \"data\": \"Little Endian\"\n      },{\n         \"field\": \"CPU(s):\",\n         \"data\": \"9\"\n      },{\n         \"field\": \"On-line CPU(s) list:\",\n         \"data\": \"0-8\"\n      },{\n         \"field\": \"Vendor ID:\",\n         \"data\": \"GenuineIntel\"\n      },{\n         \"field\": \"Model name:\",\n         \"data\": \"INTEL(R) XEON(R) PLATINUM 8573C\"\n      },{\n         \"field\": \"BIOS Model name:\",\n         \"data\": \"  CPU @ 0.0GHz\"\n      },{\n         \"field\": \"BIOS CPU family:\",\n         \"data\": \"0\"\n      },{\n         \"field\": \"CPU family:\",\n         \"data\": \"6\"\n      },{\n         \"field\": \"Model:\",\n         \"data\": \"207\"\n      },{\n         \"field\": \"Thread(s) per core:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Core(s) per socket:\",\n         \"data\": \"9\"\n      },{\n         \"field\": \"Socket(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Stepping:\",\n         \"data\": \"2\"\n      },{\n         \"field\": \"BogoMIPS:\",\n         \"data\": \"4599.99\"\n      },{\n         \"field\": \"Flags:\",\n         \"data\": \"fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx_vnni avx512_bf16 arat avx512vbmi umip waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid cldemote movdiri movdir64b fsrm serialize tsxldtrk avx512_fp16 arch_capabilities\"\n      },{\n         \"field\": \"Hypervisor vendor:\",\n         \"data\": \"KVM\"\n      },{\n         \"field\": \"Virtualization type:\",\n         \"data\": \"full\"\n      },{\n         \"field\": \"L1d cache:\",\n         \"data\": \"240 KiB (5 instances)\"\n      },{\n         \"field\": \"L1i cache:\",\n         \"data\": \"160 KiB (5 instances)\"\n      },{\n         \"field\": \"L2 cache:\",\n         \"data\": \"10 MiB (5 instances)\"\n      },{\n         \"field\": \"L3 cache:\",\n         \"data\": \"260 MiB (1 instance)\"\n      },{\n         \"field\": \"NUMA node(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"NUMA node0 CPU(s):\",\n         \"data\": \"0-8\"\n      },{\n         \"field\": \"Vulnerability Gather data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Ghostwrite:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Indirect target selection:\",\n         \"data\": \"Vulnerable\"\n      },{\n         \"field\": \"Vulnerability Itlb multihit:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability L1tf:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Meltdown:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mmio stale data:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Old microcode:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Reg file data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Retbleed:\",\n         \"data\": \"Vulnerable\"\n      },{\n         \"field\": \"Vulnerability Spec rstack overflow:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Spec store bypass:\",\n         \"data\": \"Vulnerable\"\n      },{\n         \"field\": \"Vulnerability Spectre v1:\",\n         \"data\": \"Vulnerable: __user pointer sanitization and usercopy barriers only; no swapgs barriers\"\n      },{\n         \"field\": \"Vulnerability Spectre v2:\",\n         \"data\": \"Vulnerable; STIBP: disabled; PBRSB-eIBRS: Not affected; BHI: Vulnerable\"\n      },{\n         \"field\": \"Vulnerability Srbds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsa:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsx async abort:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Vmscape:\",\n         \"data\": \"Not affected\"\n      }\n   ]\n}\n"
+  },
+  "settings": {
+    "threads": 8,
+    "size": "250K",
+    "rounds": 3,
+    "prefetch": 1,
+    "yield": true,
+    "huge_pages_requested": false,
+    "msr_writes": false
+  },
+  "runs": [
+    {
+      "run": "rx-0-upstream-1",
+      "binary": "/workspace/scratch/09e3db5f90d9/xmrig-baseline/build/xmrig",
+      "mode": "upstream",
+      "algorithm": "rx/0",
+      "seconds": 138.659,
+      "hashrate": 1803.0,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "upstream dispatch",
+      "memory_status": [
+        "[2026-10-05 20:28:05.180]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:28:13.517]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (1 ms)"
+      ],
+      "log": "rx-0-upstream-1.log"
+    },
+    {
+      "run": "rx-0-aes-1",
+      "binary": "/workspace/scratch/09e3db5f90d9/metaxmrig/build/xmrig",
+      "mode": "aes",
+      "algorithm": "rx/0",
+      "seconds": 130.882,
+      "hashrate": 1910.1,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "aes",
+      "memory_status": [
+        "[2026-10-05 20:30:32.304]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:30:38.990]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (1 ms)"
+      ],
+      "log": "rx-0-aes-1.log"
+    },
+    {
+      "run": "rx-0-vaes512-1",
+      "binary": "/workspace/scratch/09e3db5f90d9/metaxmrig/build/xmrig",
+      "mode": "vaes512",
+      "algorithm": "rx/0",
+      "seconds": 128.018,
+      "hashrate": 1952.9,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "vaes512",
+      "memory_status": [
+        "[2026-10-05 20:32:50.107]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:32:57.659]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (2 ms)"
+      ],
+      "log": "rx-0-vaes512-1.log"
+    },
+    {
+      "run": "rx-0-aes-2",
+      "binary": "/workspace/scratch/09e3db5f90d9/metaxmrig/build/xmrig",
+      "mode": "aes",
+      "algorithm": "rx/0",
+      "seconds": 156.482,
+      "hashrate": 1597.6,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "aes",
+      "memory_status": [
+        "[2026-10-05 20:35:05.806]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:35:13.734]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (4 ms)"
+      ],
+      "log": "rx-0-aes-2.log"
+    },
+    {
+      "run": "rx-0-vaes512-2",
+      "binary": "/workspace/scratch/09e3db5f90d9/metaxmrig/build/xmrig",
+      "mode": "vaes512",
+      "algorithm": "rx/0",
+      "seconds": 166.366,
+      "hashrate": 1502.7,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "vaes512",
+      "memory_status": [
+        "[2026-10-05 20:37:50.402]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:37:59.410]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (8 ms)"
+      ],
+      "log": "rx-0-vaes512-2.log"
+    },
+    {
+      "run": "rx-0-upstream-2",
+      "binary": "/workspace/scratch/09e3db5f90d9/xmrig-baseline/build/xmrig",
+      "mode": "upstream",
+      "algorithm": "rx/0",
+      "seconds": 172.907,
+      "hashrate": 1445.9,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "upstream dispatch",
+      "memory_status": [
+        "[2026-10-05 20:40:45.994]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:40:56.977]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (30 ms)"
+      ],
+      "log": "rx-0-upstream-2.log"
+    },
+    {
+      "run": "rx-0-vaes512-3",
+      "binary": "/workspace/scratch/09e3db5f90d9/metaxmrig/build/xmrig",
+      "mode": "vaes512",
+      "algorithm": "rx/0",
+      "seconds": 153.833,
+      "hashrate": 1625.1,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "vaes512",
+      "memory_status": [
+        "[2026-10-05 20:43:50.028]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:43:58.857]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (9 ms)"
+      ],
+      "log": "rx-0-vaes512-3.log"
+    },
+    {
+      "run": "rx-0-upstream-3",
+      "binary": "/workspace/scratch/09e3db5f90d9/xmrig-baseline/build/xmrig",
+      "mode": "upstream",
+      "algorithm": "rx/0",
+      "seconds": 145.036,
+      "hashrate": 1723.7,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "upstream dispatch",
+      "memory_status": [
+        "[2026-10-05 20:46:33.159]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (1 ms)",
+        "[2026-10-05 20:46:43.042]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (5 ms)"
+      ],
+      "log": "rx-0-upstream-3.log"
+    },
+    {
+      "run": "rx-0-aes-3",
+      "binary": "/workspace/scratch/09e3db5f90d9/metaxmrig/build/xmrig",
+      "mode": "aes",
+      "algorithm": "rx/0",
+      "seconds": 130.009,
+      "hashrate": 1922.9,
+      "checksum": "7D6054757BB08A63",
+      "expected": "7D6054757BB08A63",
+      "correct": true,
+      "selected_aes": "aes",
+      "memory_status": [
+        "[2026-10-05 20:49:08.423]  randomx  allocated 2336 MB (2080+256) huge pages 0% 0/1168 +JIT (0 ms)",
+        "[2026-10-05 20:49:18.115]  cpu      READY threads 8/8 (8) huge pages 0% 0/8 memory 16384 KB (15 ms)"
+      ],
+      "log": "rx-0-aes-3.log"
+    }
+  ],
+  "summary": [
+    {
+      "algorithm": "rx/0",
+      "mode": "upstream",
+      "median_hs": 1723.7,
+      "min_hs": 1445.9,
+      "max_hs": 1803.0,
+      "vs_upstream_percent": 0.0
+    },
+    {
+      "algorithm": "rx/0",
+      "mode": "aes",
+      "median_hs": 1910.1,
+      "min_hs": 1597.6,
+      "max_hs": 1922.9,
+      "vs_upstream_percent": 10.81394674247258
+    },
+    {
+      "algorithm": "rx/0",
+      "mode": "vaes512",
+      "median_hs": 1625.1,
+      "min_hs": 1502.7,
+      "max_hs": 1952.9,
+      "vs_upstream_percent": -5.72025294424785
+    }
+  ]
+}

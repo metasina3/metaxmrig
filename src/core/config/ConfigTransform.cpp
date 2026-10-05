@@ -175,6 +175,11 @@ void xmrig::ConfigTransform::transform(rapidjson::Document &doc, int key, const 
     case IConfig::RandomXModeKey: /* --randomx-mode */
         return set(doc, RxConfig::kField, RxConfig::kMode, arg);
 
+    case IConfig::RandomXAesKey: /* --randomx-aes */
+        // A top-level override preserves the user's existing RandomX object
+        // in JsonChain instead of replacing all its nested settings.
+        return set(doc, RxConfig::kAesOverride, arg);
+
     case IConfig::RandomX1GbPagesKey: /* --randomx-1gb-pages */
         return set(doc, RxConfig::kField, RxConfig::kOneGbPages, true);
 
@@ -361,4 +366,3 @@ void xmrig::ConfigTransform::transformBenchmark(rapidjson::Document &doc, int ke
     }
 }
 #endif
-

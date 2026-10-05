@@ -41,6 +41,9 @@ inline hashAndFillAes1Rx4_impl* GetSoftAESImpl()
 
 void SelectSoftAESImpl(size_t threadsCount);
 
+// Returns the selected implementation after checking compiled/runtime ISA support.
+bool SelectHardwareAESImpl(bool requestVAES512);
+
 template<int softAes>
 void hashAes1Rx4(const void *input, size_t inputSize, void *hash);
 

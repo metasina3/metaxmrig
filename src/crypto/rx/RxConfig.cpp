@@ -21,6 +21,7 @@
 #include "3rdparty/rapidjson/document.h"
 #include "backend/cpu/Cpu.h"
 #include "base/io/json/Json.h"
+#include "base/io/log/Log.h"
 
 
 #include <array>
@@ -36,6 +37,8 @@
 
 namespace xmrig {
 
+const char *RxConfig::kAes                      = "aes";
+const char *RxConfig::kAesOverride              = "randomx-aes";
 const char *RxConfig::kInit                     = "init";
 const char *RxConfig::kInitAVX2                 = "init-avx2";
 const char *RxConfig::kField                    = "randomx";
@@ -52,6 +55,7 @@ const char *RxConfig::kNUMA                     = "numa";
 
 
 static const std::array<const char *, RxConfig::ModeMax> modeNames = { "auto", "fast", "light" };
+static const std::array<const char *, RxConfig::AesModeMax> aesModeNames = { "auto", "aes", "vaes512" };
 
 
 #ifdef XMRIG_FEATURE_MSR
@@ -80,6 +84,8 @@ static_assert (kMsrArraySize == ICpuInfo::MSR_MOD_MAX, "kMsrArraySize and MSR_MO
 bool xmrig::RxConfig::read(const rapidjson::Value &value)
 {
     if (value.IsObject()) {
+        setAesMode(Json::getString(value, kAes, "auto"));
+
         m_threads         = Json::getInt(value, kInit, m_threads);
         m_initDatasetAVX2 = Json::getInt(value, kInitAVX2, m_initDatasetAVX2);
         m_mode            = readMode(Json::getValue(value, kMode));
@@ -135,6 +141,7 @@ rapidjson::Value xmrig::RxConfig::toJSON(rapidjson::Document &doc) const
     auto &allocator = doc.GetAllocator();
 
     Value obj(kObjectType);
+    obj.AddMember(StringRef(kAes),          StringRef(aesModeName()), allocator);
     obj.AddMember(StringRef(kInit),         m_threads, allocator);
     obj.AddMember(StringRef(kInitAVX2),     m_initDatasetAVX2, allocator);
     obj.AddMember(StringRef(kMode),         StringRef(modeName()), allocator);
@@ -206,6 +213,23 @@ std::vector<uint32_t> xmrig::RxConfig::nodeset() const
 const char *xmrig::RxConfig::modeName() const
 {
     return modeNames[m_mode];
+}
+
+const char *xmrig::RxConfig::aesModeName() const
+{
+    return aesModeNames[m_aesMode];
+}
+
+void xmrig::RxConfig::setAesMode(const char *aes)
+{
+    m_aesMode = AesAuto;
+    for (uint32_t i = 0; i < AesModeMax; ++i) {
+        if (strcasecmp(aes, aesModeNames[i]) == 0) {
+            m_aesMode = static_cast<AesMode>(i);
+            return;
+        }
+    }
+    LOG_WARN("unknown randomx.aes value '%s'; using auto", aes);
 }
 
 

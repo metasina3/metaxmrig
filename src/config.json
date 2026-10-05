@@ -18,6 +18,7 @@
         "init": -1,
         "init-avx2": -1,
         "mode": "auto",
+        "aes": "auto",
         "1gb-pages": false,
         "rdmsr": true,
         "wrmsr": true,

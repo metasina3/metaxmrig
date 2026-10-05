@@ -113,6 +113,7 @@ public:
         YieldKey             = 1030,
         Argon2ImplKey        = 1039,
         RandomXCacheQoSKey   = 1040,
+        RandomXAesKey        = 1060,
 
         // xmrig amd
         OclPlatformKey       = 1400,

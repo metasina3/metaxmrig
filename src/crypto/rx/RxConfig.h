@@ -52,6 +52,15 @@ public:
         ScratchpadPrefetchMax,
     };
 
+    enum AesMode : uint32_t {
+        AesAuto,
+        AesLegacy,
+        AesVAES512,
+        AesModeMax
+    };
+
+    static const char *kAes;
+    static const char *kAesOverride;
     static const char *kCacheQoS;
     static const char *kField;
     static const char *kInit;
@@ -76,6 +85,9 @@ public:
 #   endif
 
     const char *modeName() const;
+    const char *aesModeName() const;
+    void setAesMode(const char *aes);
+    inline AesMode aesMode() const { return m_aesMode; }
     uint32_t threads(uint32_t limit = 100) const;
 
     inline int initDatasetAVX2() const  { return m_initDatasetAVX2; }
@@ -112,6 +124,7 @@ private:
     int m_threads         = -1;
     int m_initDatasetAVX2 = -1;
     Mode m_mode           = AutoMode;
+    AesMode m_aesMode      = AesAuto;
 
     ScratchpadPrefetchMode m_scratchpadPrefetchMode = ScratchpadPrefetchT0;
 

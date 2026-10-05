@@ -1,4 +1,23 @@
-# تغییرات MetaXMRig 6.26.0-meta.1
+# تغییرات MetaXMRig 6.26.0-meta.2
+
+## تغییرات این نسخه نسبت به meta.1
+
+کد انتخاب AES و الگوریتم RandomX همان نسخهٔ قبل است. نسخهٔ `meta.2` روش ساخت و بسته‌بندی را تغییر می‌دهد: ساخت واقعی در Alpine 3.22.6، لینک کامل با musl به‌جای glibc، دو بستهٔ x64 و ARM64، و آزمون اجرای همان فایل روی چند خانوادهٔ توزیع لینوکس. ریلیز قبلی و فایل‌های آن از tag قبلی همچنان قابل دریافت‌اند.
+
+| فایل | تغییر و علت |
+|---|---|
+| `scripts/build_alpine_release.sh` | ساخت بومی دو نسخهٔ candidate/baseline در Alpine، انتخاب صریح libuv/OpenSSL استاتیک، hwloc حداقلی، ثبت وابستگی‌ها و بررسی ELF بدون INTERP/NEEDED |
+| `.github/workflows/alpine-static-release.yml` | جایگزینی workflow قبلی با ساخت بومی x64 و ARM64؛ بررسی checksum و سازگاری توزیع‌ها؛ انتشار فقط بعد از موفقیت هر دو معماری |
+| `tests/test_linux_portability.py` | بررسی version/help، resolve نام localhost، TLS با fingerprint صحیح، SNI و دریافت login توسط سرور محلی بدون ارسال job |
+| `release/licenses/` | اعلان‌های مجوز musl، libuv، OpenSSL و استثنای کتابخانهٔ runtime GCC برای توزیع همراه فایل استاتیک |
+| `release/VERSION` و `src/version.h` | افزایش نسخه به `6.26.0-meta.2`، بدون تغییر اعداد سازگاری upstream |
+| `docs/PORTABILITY_FA.md` و راهنماها | توضیح تفاوت musl/glibc، معماری مناسب، مراحل ساخت و مرز آزمون‌های سازگاری |
+
+علت تغییر: executable استاتیک ساخته‌شده با glibc می‌تواند هنگام resolve نام‌ها هنوز به ماژول‌های سیستم مقصد متکی باشد. ساخت musl این وابستگی به loader و کتابخانه‌های glibc مقصد را حذف می‌کند. هنوز معماری CPU، قابلیت‌های target و امکانات کرنل باید مناسب باشند. این تغییر، بهینه‌سازی اثبات‌شدهٔ هشریت نیست.
+
+در ARM64، CMake upstream واحدهای x86 و VAES را حذف می‌کند و target موجود ARMv8 crypto را به کار می‌برد. درخواست `vaes512` به fallback موجود می‌رسد؛ دستور x86 روی ARM اجرا نمی‌شود. فلگ عمومی `-march=native` اضافه نشده است.
+
+## تغییرات اولیهٔ meta.1
 
 ## پایه و هدف نسخه
 
@@ -53,7 +72,7 @@
 
 ## محدوده و محدودیت‌ها
 
-- تمرکز این نسخه RandomX روی CPU و Linux x86-64 است. نسخهٔ اجرایی برای ARM/Windows/macOS تولید نشده است.
+- تمرکز بسته‌های فعلی RandomX روی CPU و Linux x86-64/ARM64 است. Windows/macOS و معماری‌های ۳۲ بیتی در این ریلیز ارائه نشده‌اند.
 - تنظیمات huge pages، MSR، NUMA، prefetch و yield از upstream آمده‌اند. بستهٔ مقایسه، تغییر prefetch/yield را آسان می‌کند؛ این بخش‌ها در کد بهینه‌سازی جدیدی دریافت نکرده‌اند.
 - فلگ سراسری `-march=native` یا `-mavx512f` اضافه نشده است. کرنل VAES512 مانند upstream با فلگ‌های جداگانه کامپایل می‌شود تا باینری اصلی به AVX-512 وابسته نباشد.
 - هیچ تغییر در PoW، کیف پول، انتخاب استخر، donation، JIT یا سیاست nonce انجام نشده است. share واقعی استخر هنوز آزمایش نشده است.

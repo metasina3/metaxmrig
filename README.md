@@ -7,6 +7,7 @@ Experimental fork of XMRig 6.26.0 for measured RandomX CPU tuning.
 - **[شرح تغییرات و نتایج آزمایش‌ها](docs/CHANGES_FA.md)**
 - New option: `--randomx-aes=auto|aes|vaes512`. Default `auto` retains the upstream Zen 5 selection policy with additional capability checks; `vaes512` is an opt-in experiment on other compatible CPUs.
 - Packages include an unmodified, pinned upstream binary for comparison. A hashrate increase is hardware-dependent and must be measured.
+- Since `6.26.0-meta.2`, Linux x64 and ARM64 packages are fully static musl executables built natively inside Alpine. See [Linux portability and build details](docs/PORTABILITY_FA.md).
 
 The upstream project description, credits and donation details follow.
 

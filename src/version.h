@@ -11,7 +11,7 @@
 #define APP_ID        "xmrig"
 #define APP_NAME      "MetaXMRig"
 #define APP_DESC      "MetaXMRig experimental miner, based on XMRig"
-#define APP_VERSION   "6.26.0-meta.1"
+#define APP_VERSION   "6.26.0-meta.2"
 #define APP_DOMAIN    "xmrig.com"
 #define APP_SITE      "www.xmrig.com"
 #define APP_COPYRIGHT "Copyright (C) 2016-2026 xmrig.com"

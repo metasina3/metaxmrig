@@ -1,0 +1,130 @@
+name: Alpine static Linux release
+
+on:
+  push:
+    branches: [master]
+    paths: [release/VERSION, scripts/build_alpine_release.sh, tests/test_linux_portability.py, .github/workflows/alpine-static-release.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-experimental-release
+  cancel-in-progress: false
+
+env:
+  ALPINE_IMAGE: alpine:3.22.6
+
+jobs:
+  build:
+    if: github.repository == 'metasina3/metaxmrig'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build and verify both binaries inside Alpine
+        env:
+          ARCH: ${{ matrix.arch }}
+        run: |
+          docker pull "$ALPINE_IMAGE"
+          image=$(docker image inspect --format '{{index .RepoDigests 0}}' "$ALPINE_IMAGE")
+          docker run --rm -v "$PWD:/src" -w /src -e BUILD_IMAGE="$image" -e ARCH="$ARCH" \
+            "$image" sh -ec '
+              apk add --no-cache bash build-base cmake git curl linux-headers binutils \
+                libuv-dev libuv-static openssl-dev openssl-libs-static openssl \
+                autoconf automake libtool python3 pkgconf
+              bash scripts/build_alpine_release.sh
+              version=$(cat release/VERSION)
+              bundle="build-release/metaxmrig-$version-linux-musl-$ARCH"
+              python3 tests/test_aes_config.py "$bundle/metaxmrig"
+              python3 tests/test_linux_portability.py "$bundle/metaxmrig"
+              if [ "$ARCH" = x64 ]; then bash scripts/test_aes.sh; fi
+              python3 scripts/compare_randomx.py --candidate "$bundle/metaxmrig" \
+                --baseline "$bundle/xmrig-baseline" --modes vaes512 --algorithms rx/0 \
+                --threads 4 --rounds 1 --output "build-release/verification-$ARCH"
+              tar -czf "build-release/verification-$ARCH.tar.gz" -C build-release "verification-$ARCH"
+            '
+      - name: Check the same binaries on other Linux distributions
+        env:
+          ARCH: ${{ matrix.arch }}
+        run: |
+          version=$(cat release/VERSION)
+          bundle="build-release/metaxmrig-$version-linux-musl-$ARCH"
+          for image in alpine:3.20 ubuntu:22.04 ubuntu:24.04 debian:bookworm-slim rockylinux:9; do
+            echo "Checking $ARCH package on $image"
+            docker run --rm -v "$PWD/$bundle:/bundle:ro" -v "$PWD/tests:/tests:ro" \
+              "$image" sh -ec '
+                /bundle/metaxmrig --version
+                /bundle/xmrig-baseline --version
+                if command -v apk >/dev/null; then
+                  apk add --no-cache python3 openssl
+                elif command -v apt-get >/dev/null; then
+                  apt-get update -qq && apt-get install -y -qq --no-install-recommends python3 openssl
+                else
+                  dnf install -y -q python3 openssl
+                fi
+                python3 /tests/test_linux_portability.py /bundle/metaxmrig
+                python3 /tests/test_aes_config.py /bundle/metaxmrig
+              ' 2>&1 | tee "build-release/portability-$ARCH-${image//[:\/]/-}.log"
+          done
+          tar -czf "build-release/portability-$ARCH.tar.gz" -C build-release \
+            $(cd build-release && printf '%s\n' portability-"$ARCH"-*.log)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: linux-musl-${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            build-release/metaxmrig-*-linux-musl-${{ matrix.arch }}.tar.gz
+            build-release/metaxmrig-*-linux-musl-${{ matrix.arch }}.sha256
+            build-release/verification-${{ matrix.arch }}.tar.gz
+            build-release/portability-${{ matrix.arch }}.tar.gz
+            build-release/verification-${{ matrix.arch }}/results.json
+
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: linux-musl-*
+          merge-multiple: true
+          path: artifacts
+      - name: Publish only after both architectures and all compatibility tests pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          version=$(cat release/VERSION)
+          tag="v$version"
+          cd artifacts
+          for arch in x64 arm64; do
+            sha256sum -c "metaxmrig-$version-linux-musl-$arch.sha256"
+          done
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to replace published assets.'
+            exit 1
+          fi
+          gh release create "$tag" metaxmrig-*.tar.gz metaxmrig-*.sha256 \
+            verification-*.tar.gz portability-*.tar.gz \
+            --target "$SOURCE_SHA" --title "MetaXMRig $version — Alpine static Linux x64 / ARM64" \
+            --prerelease --latest=false --notes-file "$GITHUB_WORKSPACE/release/NOTES.md"

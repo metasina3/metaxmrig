@@ -11,7 +11,11 @@ permissions:
 
 concurrency:
   group: linux-experimental-release
-  cancel-in-progress: false
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
 
 env:
   ALPINE_IMAGE: alpine:3.22.6
@@ -56,6 +60,8 @@ jobs:
                 --threads 4 --rounds 1 --output "build-release/verification-$ARCH"
               tar -czf "build-release/verification-$ARCH.tar.gz" -C build-release "verification-$ARCH"
             '
+          # Docker builds as root; subsequent host steps need to write logs.
+          sudo chown -R "$(id -u):$(id -g)" build-release
       - name: Check the same binaries on other Linux distributions
         env:
           ARCH: ${{ matrix.arch }}

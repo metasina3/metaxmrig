@@ -3,7 +3,7 @@ name: Linux experimental release
 on:
   push:
     branches: [master]
-    paths: [release/VERSION]
+    paths: [release/VERSION, scripts/build_linux_release.sh, .github/workflows/linux-experimental-release.yml]
   workflow_dispatch:
 
 permissions:

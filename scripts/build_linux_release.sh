@@ -6,10 +6,20 @@ work=${1:-"$root/build-release"}
 mkdir -p "$work"
 work=$(cd "$work" && pwd)
 jobs=${BUILD_JOBS:-4}
+compiler=${CXX:-g++}
 upstream=b2ca72480c58d197e18c885d9fc1a0c8d517e60a
 version=$(cat "$root/release/VERSION")
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+-meta\.[0-9]+$ ]]
 [ "$(uname -s)" = Linux ] && [ "$(uname -m)" = x86_64 ]
+uv_static=$("$compiler" -print-file-name=libuv.a)
+if [ ! -f "$uv_static" ]; then
+    # Ubuntu 22.04 ships libuv_a.a; newer releases ship libuv.a.
+    uv_static=$("$compiler" -print-file-name=libuv_a.a)
+fi
+if [ ! -f "$uv_static" ]; then
+    echo 'Static libuv not found; install libuv1-dev.' >&2
+    exit 1
+fi
 
 # Minimal static hwloc keeps NUMA/topology support without system plugin deps.
 archive="$work/hwloc-2.12.1.tar.gz"
@@ -36,6 +46,7 @@ git -C "$root" archive "$upstream" | tar --no-same-owner -xf - -C "$work/upstrea
 flags=(-DCMAKE_BUILD_TYPE=Release -DBUILD_STATIC=ON -DWITH_HWLOC=ON \
     -DWITH_RANDOMX=ON -DWITH_VAES=ON -DWITH_BENCHMARK=ON \
     -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_KAWPOW=OFF -DWITH_GHOSTRIDER=OFF \
+    -DUV_LIBRARY="$uv_static" \
     -DHWLOC_INCLUDE_DIR="$work/deps/include" -DHWLOC_LIBRARY="$work/deps/lib/libhwloc.a")
 cmake -S "$root" -B "$work/candidate" "${flags[@]}"
 cmake --build "$work/candidate" -j "$jobs"

@@ -24,7 +24,7 @@
 | `tests/meta_aes_probe.cpp` و `scripts/test_aes.sh` | مقایسهٔ ۱۲۸ ورودی مستقل بین AES استاندارد و VAES512، سپس microbenchmark جداگانه با ۹ دور |
 | `tests/test_aes_config.py` | آزمون یکپارچهٔ CLI با API محلی و CPU خاموش؛ بررسی حفظ تمام تنظیمات RandomX و fallback مقدار نامعتبر |
 | `scripts/build_linux_release.sh` | ساخت استاتیک Linux x64 برای دو نسخه با وابستگی‌ها و گزینه‌های مشترک، بسته‌بندی، ثبت build info و SHA-256 |
-| `.github/workflows/linux-experimental-release.yml` | ساخت و آزمون خودکار، سپس انتشار prerelease با فایل اجرایی و checksum؛ با تغییر `release/VERSION` یا اجرای دستی شروع می‌شود |
+| `.github/workflows/linux-experimental-release.yml` | ساخت و آزمون خودکار، سپس انتشار prerelease با فایل اجرایی و checksum؛ با تغییر نسخه، اسکریپت ساخت، workflow یا اجرای دستی شروع می‌شود؛ فایل‌های ریلیز موجود جایگزین نمی‌شوند |
 | `release/VERSION` و `release/NOTES.md` | نسخه و توضیحات ریلیز |
 | `README.md`، این فایل و `TESTING_FA.md` | معرفی فورک، شرح تغییر و روش بازتولید تست‌ها |
 | `.gitignore` | حذف پوشه‌های خروجی ساخت و بنچمارک از فایل‌های commit |
